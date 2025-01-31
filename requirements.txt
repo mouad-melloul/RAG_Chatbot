@@ -1,0 +1,9 @@
+flask
+langchain
+langchain-community
+langchain-ollama
+faiss-cpu
+tiktoken
+python-dotenv
+pymupdf
+werkzeug
