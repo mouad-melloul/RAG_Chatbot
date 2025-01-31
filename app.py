@@ -132,11 +132,11 @@ def upload_file():
             # Initialiser le système RAG avec le fichier PDF téléversé
             try:
                 rag_chain = initialize_rag_system(file_path)
-                return jsonify({"message": "PDF uploaded and processed successfully."}), 200
+                return jsonify({"success": True}), 200 
             except Exception as e:
                 return jsonify({"error": f"Failed to process PDF: {str(e)}"}), 500
     
-    return render_template("upload.html")
+    return render_template("chat.html")
 
 # Route pour poser une question
 @app.route("/ask", methods=["POST"])

@@ -251,3 +251,27 @@ border-radius: 0 0 15px 15px !important;
 .upload-form button:hover {
     background-color: rgba(0, 0, 0, 0.5);
 }
+
+/* Hide the default file input */
+.custom-file-input {
+	display: none;
+}
+/* Style the custom file upload button */
+.custom-file-upload {
+	display: inline-block;
+	padding: 6px 12px;
+	cursor: pointer;
+	background-color: #007bff;
+	color: white;
+	border-radius: 4px;
+	font-size: 14px;
+}
+.custom-file-upload:hover {
+	background-color: #0056b3;
+}
+/* Style for displaying the selected file name */
+#file-name {
+	margin-left: 10px;
+	font-size: 14px;
+	color: #333;
+}
