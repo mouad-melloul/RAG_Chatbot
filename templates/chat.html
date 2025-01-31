@@ -1,0 +1,169 @@
+<link
+  href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+  rel="stylesheet"
+  id="bootstrap-css"
+/>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+      integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.5.0/css/all.css"
+      integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU"
+      crossorigin="anonymous"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="{{ url_for('static', filename='style.css')}}"
+    />
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <div class="row justify-content-center h-100">
+          <div class="col-md-8 col-xl-6 chat">
+            <div class="card">
+              <div class="card-header msg_head">
+                <div class="d-flex bd-highlight">
+                  <div class="img_cont">
+                    <img src="{{ url_for('static', filename='images/PDFLogo.png') }}"
+                     class="rounded-circle user_img" />
+                    <span class="online_icon"></span>
+                  </div>
+                  <div class="user_info">
+                    <span>DocBot</span>
+                    <p>Ask me anything!</p>
+                  </div>
+                  <!-- <div class="ml-auto">
+                    <a href="/upload" class="btn btn-light btn-sm">
+                      <i class="fas fa-upload"></i> Upload PDF
+                    </a>
+                  </div> -->
+                  <div class="upload-form">
+                    <form action="/upload" method="post" enctype="multipart/form-data">
+                        <input type="file" name="file" accept=".pdf" required>
+                        <button type="submit">Upload</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <div id="messageFormeight" class="card-body msg_card_body"></div>
+              <div class="card-footer">
+                <form id="messageArea" class="input-group">
+                  <input
+                    type="text"
+                    id="question"
+                    name="msg"
+                    placeholder="Type your message..."
+                    autocomplete="off"
+                    class="form-control type_msg"
+                    required
+                  />
+                  <div class="input-group-append">
+                    <button
+                      type="submit"
+                      id="send"
+                      class="input-group-text send_btn"
+                    >
+                      <i class="fas fa-location-arrow"></i>
+                    </button>
+                  </div>
+                </form>
+                <!-- Moved Thinking text here -->
+                <div id="thinking" style="display: none; font-style: italic; color: white;">...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <script>
+        function scrollToBottom() {
+          var messageBody = document.getElementById("messageFormeight");
+          messageBody.scrollTop = messageBody.scrollHeight;
+        }
+      
+        $(document).ready(function () {
+          // Event listener for the send button
+          $("#send").on("click", function (event) {
+            const date = new Date();
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            const str_time = hour + ":" + minute;
+      
+            // Retrieve the text from the textarea
+            var rawText = $("#question").val();
+            if (!rawText) return;  // Prevent empty messages
+      
+            // User's message HTML structure
+            var userHtml =
+              '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' +
+              rawText +
+              '<span class="msg_time_send">' +
+              str_time +
+              '</span></div><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/user.png") }}" class="rounded-circle user_img_msg"></div></div>';
+      
+            // Clear the textarea input field after sending
+            $("#question").val("");
+      
+            // Append the user's message to the chat window
+            $("#messageFormeight").append(userHtml);
+            scrollToBottom();
+      
+            // Show "Thinking..." message
+            var thinkingHtml =
+              '<div class="d-flex justify-content-start mb-4" id="thinkingMessage"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">...</div></div>';
+            
+            $("#messageFormeight").append($.parseHTML(thinkingHtml));
+            scrollToBottom();
+      
+            // Send the question to the Flask backend
+            $.ajax({
+              url: "/ask",  // The route that handles user questions
+              type: "POST",
+              contentType: "application/json",
+              data: JSON.stringify({ question: rawText }),  // Send the message as a JSON object
+              success: function (data) {
+                // Bot's response
+                const botAnswer = data.answer.replace(/\n/g, '<br>');
+                var botHtml =
+                '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' +
+                botAnswer +
+                '<span class="msg_time">' +
+                str_time +
+                '</span></div></div>';
+      
+                // Remove the "Thinking..." message and append the bot's response
+                $("#thinkingMessage").remove();
+                $("#messageFormeight").append($.parseHTML(botHtml));
+                scrollToBottom();
+              },
+              error: function (err) {
+                // Handle error response if any
+                console.error("Error:", err);
+                var errorHtml =
+                  '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">An error occurred. Please try again.</div></div>';
+                $("#messageFormeight").append(errorHtml);
+                scrollToBottom();
+              }
+            });
+      
+            event.preventDefault();
+          });
+        });
+      </script>      
+
+</body>
+</html>
