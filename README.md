@@ -23,6 +23,26 @@ venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 ```
 
+## Setup supplémentaire
+
+Avant de lancer l'application, merci de créer manuellement les dossiers et fichiers suivants, qui sont exclus du contrôle de version via `.gitignore` :
+
+- `temp_uploads/` : dossier temporaire pour stocker les fichiers PDF téléchargés.
+- `uploads/` : dossier pour stocker les fichiers PDF persistants.
+- `api_key.txt` : fichier pour y placer vos clés API ou secrets (à ne pas partager).
+
+Pour créer ces dossiers et fichiers sous Linux/macOS ou Windows (PowerShell), vous pouvez exécuter :
+
+```bash
+mkdir temp_uploads uploads
+type nul > api_key.txt  # Windows
+# ou
+touch api_key.txt       # Linux/macOS
+```
+
+Assurez-vous d'ajouter vos clés ou secrets dans `api_key.txt` avant d'utiliser l'application.
+
+
 ## Utilisation
 
 1. Lancer l’application Flask :  
