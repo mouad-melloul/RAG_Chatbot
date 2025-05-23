@@ -1,0 +1,14 @@
+1. Collecte et chargement des documents : Importation et chargement des fichiers PDF contenant les informations à exploiter.
+
+2. Extraction et découpage du texte : Extraction du contenu textuel des PDF puis découpage en segments (chunks) gérables, pour optimiser la recherche et la gestion des données. (LangChain)
+
+3. Création des embeddings vectoriels : Conversion des segments de texte en vecteurs numériques grâce au modèle d’embeddings Ollama, facilitant ainsi la comparaison et la recherche sémantique.
+
+4. Indexation avec FAISS : Construction d’un index vectoriel FAISS pour permettre une recherche rapide et efficace des passages pertinents dans le corpus. (LangChain)
+
+5. Recherche contextuelle avancée : Mise en place d’un système de récupération (retriever) qui sélectionne les passages les plus pertinents à partir des vecteurs indexés, en réponse aux questions posées. (LangChain)
+
+6. Génération de réponses via LLaMA (Ollama) : Utilisation du modèle de langage LLaMA (hébergé localement via Ollama) pour générer des réponses précises, informées uniquement par le contenu extrait des documents.
+
+7. Garantir la sécurité et la confidentialité : Le traitement s’effectue entièrement en local, assurant la confidentialité des données et évitant toute exposition à des services externes ou cloud.
+

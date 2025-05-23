@@ -30,7 +30,7 @@
               </div>
               <div class="upload-form">
                 <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
-                  <input type="file" name="file" accept=".pdf" id="fileInput" required style="color: #848884;">
+                  <input type="file" name="pdf_file" accept=".pdf" id="fileInput" required style="color: #848884;">
                   <button type="submit" style="background-color: #c24b39; color: white;">Upload</button>
                   <!-- Success icon (hidden by default) -->
                   <span id="uploadSuccessIcon" style="display: none; color: green; margin-left: 10px; font-size: 22px;">
@@ -59,148 +59,110 @@
     </div>
   </div>
   <script>
-    function scrollToBottom() {
-      var messageBody = document.getElementById("messageFormeight");
-      messageBody.scrollTop = messageBody.scrollHeight;
-    }
+  function scrollToBottom() {
+    var messageBody = document.getElementById("messageFormeight");
+    messageBody.scrollTop = messageBody.scrollHeight;
+  }
 
-    $(document).ready(function () {
-      // Event listener for the file upload form submission
-      $("#uploadForm").on("submit", function (event) {
-        event.preventDefault(); // Prevent the default form submission
+  $(document).ready(function () {
+    // ✅ Upload Form Handler (unique et non dupliqué)
+    $("#uploadForm").on("submit", function (event) {
+      event.preventDefault(); // Prevent the default form submission
 
-        var formData = new FormData(this); // Create FormData object from the form
+      var formData = new FormData(this); // Create FormData object from the form
 
-        $.ajax({
-          url: "/upload",
-          type: "POST",
-          data: formData,
-          processData: false, // Prevent jQuery from processing the data
-          contentType: false, // Prevent jQuery from setting the content type
-          success: function (response) {
-            if (response.success) {
-              // Show the success icon
-              $("#uploadSuccessIcon").show();
+      $.ajax({
+        url: "/upload",
+        type: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (response) {
+          if (response.message) {
+            $("#uploadSuccessIcon").show();
 
-              // Add the message from the chatbot
-              const date = new Date();
-              const hour = date.getHours();
-              const minute = date.getMinutes();
-              const str_time = hour + ":" + minute;
+            const date = new Date();
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            const str_time = hour + ":" + minute;
 
-              var botHtml =
-                '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">You can ask your questions now :)<span class="msg_time">' +
-                str_time +
-                '</span></div></div>';
-
-              // Append the bot's response
-              $("#messageFormeight").append($.parseHTML(botHtml));
-              scrollToBottom();
-            } else {
-              alert("Upload failed. Please try again.");
-            }
-          },
-          error: function (err) {
-            console.error("Error:", err);
-            alert("An error occurred during upload.");
-          }
-        });
-      });
-
-      // Handle the send button click
-      $("#send").on("click", function (event) {
-        const date = new Date();
-        const hour = date.getHours();
-        const minute = date.getMinutes();
-        const str_time = hour + ":" + minute;
-
-        // Retrieve the text from the textarea
-        var rawText = $("#question").val();
-        if (!rawText) return;  // Prevent empty messages
-
-        // User's message HTML structure
-        var userHtml =
-          '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' +
-          rawText +
-          '<span class="msg_time_send">' +
-          str_time +
-          '</span></div><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/user.png") }}" class="rounded-circle user_img_msg"></div></div>';
-
-        // Clear the textarea input field after sending
-        $("#question").val("");
-
-        // Append the user's message to the chat window
-        $("#messageFormeight").append(userHtml);
-        scrollToBottom();
-
-        // Show "Thinking..." message
-        var thinkingHtml =
-          '<div class="d-flex justify-content-start mb-4" id="thinkingMessage"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">...</div></div>';
-
-        $("#messageFormeight").append($.parseHTML(thinkingHtml));
-        scrollToBottom();
-
-        // Send the question to the Flask backend
-        $.ajax({
-          url: "/ask",  // The route that handles user questions
-          type: "POST",
-          contentType: "application/json",
-          data: JSON.stringify({ question: rawText }),  // Send the message as a JSON object
-          success: function (data) {
-            // Bot's response
-            const botAnswer = data.answer.replace(/\n/g, '<br>');
             var botHtml =
-              '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' +
-              botAnswer +
-              '<span class="msg_time">' +
+              '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">You can ask your questions now :)<span class="msg_time">' +
               str_time +
               '</span></div></div>';
 
-            // Remove the "Thinking..." message and append the bot's response
-            $("#thinkingMessage").remove();
             $("#messageFormeight").append($.parseHTML(botHtml));
             scrollToBottom();
-          },
-          error: function (err) {
-            console.error("Error:", err);
-            var errorHtml =
-              '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">An error occurred. Please try again.</div></div>';
-            $("#messageFormeight").append(errorHtml);
-            scrollToBottom();
+          } else {
+            alert("Upload failed. Please try again.");
           }
-        });
-
-        event.preventDefault();
-      });
-
-      // Handle file upload form submission
-      $("#uploadForm").on("submit", function (event) {
-        event.preventDefault(); // Prevent the default form submission
-
-        var formData = new FormData(this); // Create FormData object from the form
-
-        $.ajax({
-          url: "/upload",
-          type: "POST",
-          data: formData,
-          processData: false, // Prevent jQuery from processing the data
-          contentType: false, // Prevent jQuery from setting the content type
-          success: function (response) {
-            if (response.success) {
-              // Show the success icon
-              $("#uploadSuccessIcon").show();
-            } else {
-              alert("Upload failed. Please try again.");
-            }
-          },
-          error: function (err) {
-            console.error("Error:", err);
-            alert("An error occurred during upload.");
-          }
-        });
+        },
+        error: function (err) {
+          console.error("Error:", err);
+          alert("An error occurred during upload.");
+        }
       });
     });
-  </script>
+
+    // ✅ Message sending handler
+    $("#send").on("click", function (event) {
+      const date = new Date();
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      const str_time = hour + ":" + minute;
+
+      var rawText = $("#question").val();
+      if (!rawText) return;
+
+      var userHtml =
+        '<div class="d-flex justify-content-end mb-4"><div class="msg_cotainer_send">' +
+        rawText +
+        '<span class="msg_time_send">' +
+        str_time +
+        '</span></div><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/user.png") }}" class="rounded-circle user_img_msg"></div></div>';
+
+      $("#question").val("");
+      $("#messageFormeight").append(userHtml);
+      scrollToBottom();
+
+      var thinkingHtml =
+        '<div class="d-flex justify-content-start mb-4" id="thinkingMessage"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">...</div></div>';
+
+      $("#messageFormeight").append($.parseHTML(thinkingHtml));
+      scrollToBottom();
+
+      $.ajax({
+        url: "/ask",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({ question: rawText }),
+        success: function (data) {
+          const botAnswer = data.answer.replace(/\n/g, '<br>');
+          var botHtml =
+            '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">' +
+            botAnswer +
+            '<span class="msg_time">' +
+            str_time +
+            '</span></div></div>';
+
+          $("#thinkingMessage").remove();
+          $("#messageFormeight").append($.parseHTML(botHtml));
+          scrollToBottom();
+        },
+        error: function (err) {
+          console.error("Error:", err);
+          var errorHtml =
+            '<div class="d-flex justify-content-start mb-4"><div class="img_cont_msg"><img src="{{ url_for("static", filename="images/PDFLogo.png") }}" class="rounded-circle user_img_msg"></div><div class="msg_cotainer">An error occurred. Please try again.</div></div>';
+          $("#messageFormeight").append(errorHtml);
+          scrollToBottom();
+        }
+      });
+
+      event.preventDefault();
+    });
+  });
+</script>
+
 </body>
 
 </html>
