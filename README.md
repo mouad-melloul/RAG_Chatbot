@@ -4,7 +4,15 @@
 Ce projet implémente un système de question-réponse privé et sécurisé basé sur la méthode Retrieval-Augmented Generation (RAG).  
 Il permet de poser des questions à partir du contenu de documents PDF, en exploitant un modèle de langage LLaMA via Ollama, tout en garantissant la confidentialité des données grâce à un traitement local.
 
+## Démarrage du serveur Ollama
 
+Avant de lancer l’application Flask, il faut démarrer le serveur Ollama localement, qui écoute sur le port 11434.
+
+1. Ouvrez un terminal et lancez la commande suivante :
+
+```
+ollama serve
+```
 ## Installation
 
 1. Cloner le dépôt :
@@ -21,6 +29,10 @@ venv\Scripts\activate     # Windows
 3. Installer les dépendances :
 ```
 pip install -r requirements.txt
+```
+4. Installer le modèle LLaMA recommandé avec Ollama :
+```
+ollama pull llama3.2:1b
 ```
 
 ## Setup supplémentaire
