@@ -4,33 +4,6 @@
 Ce projet implémente un système de question-réponse privé et sécurisé basé sur la méthode Retrieval-Augmented Generation (RAG).  
 Il permet de poser des questions à partir du contenu de documents PDF, en exploitant un modèle de langage LLaMA via Ollama, tout en garantissant la confidentialité des données grâce à un traitement local.
 
-## Structure du projet
-C:.
-│ .env
-│ api_key.txt
-│ app.py                # Application Flask principale
-│ requirements.txt      # Dépendances Python
-│
-├───notebooks
-│ 3.chat_myPDF.ipynb    # Notebook d'expérimentation
-│
-├───static
-│ │ script.js           # Scripts JavaScript front-end
-│ │ style.css           # Feuilles de style CSS
-│ │
-│ └───images
-│ Baymax.jpeg
-│ PDFLogo.png
-│ user.png
-│
-├───templates
-│ chat.html              # Template HTML de l'interface utilisateur
-│
-├───temp_uploads         # Dossier pour fichiers PDF temporaires
-│
-└───uploads              # Dossier pour fichiers PDF permanents
-
-
 
 ## Installation
 
