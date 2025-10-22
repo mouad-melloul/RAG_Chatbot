@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# API Keys
+.env
+
 # Virtual environment
 venv/
 env/
