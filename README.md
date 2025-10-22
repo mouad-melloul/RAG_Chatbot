@@ -56,3 +56,21 @@ python app.py
 5. Recevoir des réponses contextuelles générées localement par le modèle LLaMA via Ollama.
 
 
+## Docker
+
+Ce projet est également containerisé avec Docker, ce qui facilite la mise en place de l’environnement.
+
+1. Construire et démarrer les conteneurs :
+```
+docker-compose up --build
+```
+
+2. Une fois le conteneur Ollama démarré, télécharger le modèle LLaMA à l’intérieur du conteneur :
+```
+docker exec -it ollama ollama pull llama3.2:1b
+```
+
+L’application Flask sera accessible sur :
+
+http://localhost:5000
+
