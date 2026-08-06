@@ -52,7 +52,7 @@ def initialize_rag_system(file_path):
     pages = loader.load()
 
     # Split into chunks
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=200)
     chunks = text_splitter.split_documents(pages)
 
     # Filter empty chunks
