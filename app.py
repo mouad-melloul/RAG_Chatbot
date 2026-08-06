@@ -99,7 +99,7 @@ def initialize_rag_system(file_path):
     )
 
     # Language model
-    model = ChatOllama(model="llama3.2:1b", base_url="http://localhost:11434")
+    model = ChatOllama(model="llama3.2:1b", base_url="http://localhost:11434") #llama3.2:3b
 
     # Simple prompt — no history
 
