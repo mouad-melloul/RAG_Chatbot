@@ -1,6 +1,5 @@
-flask
-werkzeug
 python-dotenv
+
 faiss-cpu
 
 langchain==1.2.15
@@ -10,3 +9,9 @@ langchain-text-splitters
 langchain-ollama
 
 pymupdf
+
+fastapi
+uvicorn[standard]
+python-multipart
+
+ollama
